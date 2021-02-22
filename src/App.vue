@@ -25,7 +25,7 @@
           </md-card-header>
 
           <md-card-content>
-            <pre>{{ lyrics }}</pre>
+            <a v-if="url" :href="url">{{song}} {{artist}}</a>
           </md-card-content>
         </md-card>
 
@@ -112,7 +112,7 @@ export default {
     start_seconds: null,
     end_seconds: null,
 
-    lyrics: null,
+    url: null,
     id: null,
 
     connectionError: false,
@@ -174,8 +174,10 @@ export default {
         title: this.song,
         artist: this.artist,
       });
-      this.lyrics = results.lyrics;
+      this.url = results.url;
       this.id = results.id;
+
+      window.open(this.url);
     },
   },
 };

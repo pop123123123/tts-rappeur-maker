@@ -35,13 +35,12 @@ router.post('/info', async (req, res) => {
       artist,
       optimizeQuery: true,
     };
-    const lyrics = await genius.getLyrics(options);
-
+    const { url } = (await genius.searchSong(options))[0];
 
     const videos = (await yts(`${artist} ${title}`)).videos;
     const id = videos[0].videoId;
 
-    res.json({ lyrics, id })
+    res.json({ url, id });
   } catch (err) {
     console.error(err)
     res.status(500).send()
