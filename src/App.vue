@@ -79,6 +79,14 @@
                   placeholder="xx:xx.xx"
                 ></md-input>
               </md-field>
+              <md-field>
+                <label>Cover Image url</label>
+                <md-input
+                  required
+                  v-model="img_url"
+                  placeholder="Image url: http://genius.com/____.jpg"
+                ></md-input>
+              </md-field>
             </md-card-content>
             <md-card-actions>
               <md-button type="submit" class="md-primary" :disabled="saving">
@@ -105,12 +113,13 @@ import axios from 'axios';
 export default {
   name: 'App',
   data: () => ({
-    song: 'mamacita',
-    artist: 'ninho',
+    song: null,
+    artist: null,
     original_lines: null,
     modified_lines: null,
     start_seconds: null,
     end_seconds: null,
+    img_url: null,
 
     url: null,
     id: null,
@@ -159,6 +168,11 @@ export default {
       const startSeconds = this.timeStampToSeconds(this.start_seconds);
       const endSeconds = this.timeStampToSeconds(this.end_seconds);
 
+      const results = await this.apiPost('image', {
+        img_url: this.img_url,
+      });
+      const { b64Img } = results;
+
       const config = {
         song: this.song,
         artist: this.artist,
@@ -166,6 +180,7 @@ export default {
         modified_lines: this.modified_lines,
         start_seconds: startSeconds,
         end_seconds: endSeconds,
+        b64_img: b64Img,
       };
       this.save(`${this.song}_${this.artist}.json`, JSON.stringify(config));
     },

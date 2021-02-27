@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const yts = require('yt-search');
 const genius = require('genius-lyrics-api');
+const axios = require('axios')
 
 const env = process.env.NODE_ENV || 'development'
 const API_KEY = process.env.GENIUS_KEY
@@ -41,6 +42,20 @@ router.post('/info', async (req, res) => {
     const id = videos[0].videoId;
 
     res.json({ url, id });
+  } catch (err) {
+    console.error(err)
+    res.status(500).send()
+  }
+})
+
+router.post('/image', async (req, res) => {
+  try {
+    const imgUrl = req.body.img_url;
+
+    const response = await axios.get(imgUrl, {responseType: "arraybuffer"})
+    const b64Img = Buffer.from(response.data, "binary").toString('base64');
+
+    res.json({ b64Img });
   } catch (err) {
     console.error(err)
     res.status(500).send()
