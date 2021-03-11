@@ -80,6 +80,15 @@
                 ></md-input>
               </md-field>
               <md-field>
+                <label>Iteration</label>
+                <md-input
+                  required
+                  v-model="iteration"
+                  type="number"
+                  placeholder="1"
+                ></md-input>
+              </md-field>
+              <md-field>
                 <label>Cover Image url</label>
                 <md-input
                   required
@@ -119,6 +128,7 @@ export default {
     modified_lines: null,
     start_seconds: null,
     end_seconds: null,
+    iteration: 1,
     img_url: null,
 
     url: null,
@@ -180,6 +190,7 @@ export default {
         modified_lines: this.modified_lines,
         start_seconds: startSeconds,
         end_seconds: endSeconds,
+        iteration: this.iteration,
         b64_img: b64Img,
       };
       this.save(`${this.song}_${this.artist}.json`, JSON.stringify(config));
