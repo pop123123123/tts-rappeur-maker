@@ -96,6 +96,7 @@
                   placeholder="Image url: http://genius.com/____.jpg"
                 ></md-input>
               </md-field>
+              <md-switch v-model="shorten">Shorten</md-switch>
             </md-card-content>
             <md-card-actions>
               <md-button type="submit" class="md-primary" :disabled="saving">
@@ -129,6 +130,7 @@ export default {
     start_seconds: null,
     end_seconds: null,
     iteration: 1,
+    shorten: null,
     img_url: null,
 
     url: null,
@@ -191,6 +193,7 @@ export default {
         start_seconds: startSeconds,
         end_seconds: endSeconds,
         iteration: this.iteration,
+        shorten: this.shorten,
         b64_img: b64Img,
       };
       this.save(`${this.song}_${this.artist}.json`, JSON.stringify(config));
