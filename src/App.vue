@@ -83,7 +83,7 @@
                 <label>Iteration</label>
                 <md-input
                   required
-                  v-model="iteration"
+                  v-model.number="iteration"
                   type="number"
                   placeholder="1"
                 ></md-input>
