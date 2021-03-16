@@ -196,7 +196,8 @@ export default {
         shorten: this.shorten,
         b64_img: b64Img,
       };
-      this.save(`${this.song}_${this.artist}.json`, JSON.stringify(config));
+      const extension = this.iteration > 1 ? `_${this.iteration}` : '';
+      this.save(`${this.song}_${this.artist}${extension}.json`, JSON.stringify(config));
     },
     async newProject() {
       const results = await this.apiPost('info', {
