@@ -97,6 +97,7 @@
                 ></md-input>
               </md-field>
               <md-switch v-model="shorten">Shorten</md-switch>
+              <md-switch v-model="outro">Contains outro</md-switch>
             </md-card-content>
             <md-card-actions>
               <md-button type="submit" class="md-primary" :disabled="saving">
@@ -130,6 +131,7 @@ export default {
     start_seconds: null,
     end_seconds: null,
     iteration: 1,
+    outro: null,
     shorten: null,
     img_url: null,
 
@@ -194,6 +196,7 @@ export default {
         end_seconds: endSeconds,
         iteration: this.iteration,
         shorten: this.shorten,
+        outro: this.outro,
         b64_img: b64Img,
       };
       const extension = this.iteration > 1 ? `_${this.iteration}` : '';
