@@ -3,19 +3,21 @@
     <md-app>
       <md-app-toolbar>
         <h1 class="md-title" style="flex: 1">Rap Fails Maker</h1>
-        <div class="md-flex">
-          <md-field md-inline>
-            <label>Song</label>
-            <md-input v-model="song"></md-input>
-          </md-field>
-        </div>
-        <div class="md-flex">
-          <md-field md-inline>
-            <label>Artist</label>
-            <md-input v-model="artist"></md-input>
-          </md-field>
-        </div>
-        <md-button @click="newProject" class="md-primary"> New </md-button>
+        <form @submit.prevent="newProject">
+          <div class="md-flex">
+            <md-field md-inline>
+              <label>Song</label>
+              <md-input v-model="song"></md-input>
+            </md-field>
+          </div>
+          <div class="md-flex">
+            <md-field md-inline>
+              <label>Artist</label>
+              <md-input v-model="artist"></md-input>
+            </md-field>
+          </div>
+          <md-button type="submit" class="md-raised md-primary">New</md-button>
+        </form>
       </md-app-toolbar>
 
       <md-app-content class="md-layout">
@@ -34,7 +36,7 @@
             <div class="md-title">Config</div>
           </md-card-header>
 
-          <form @submit.prevent="saveConfig">
+          <form @submit.prevent="submit">
             <md-card-content>
               <div v-if="embed_url">
                 <iframe
@@ -100,14 +102,22 @@
               <md-switch v-model="outro">Contains outro</md-switch>
             </md-card-content>
             <md-card-actions>
-              <md-button type="submit" class="md-primary" :disabled="saving">
+              <md-button type="submit" class="md-primary" :disabled="saving" value="save">
                 Save
+              </md-button>
+              <md-button
+                type="submit"
+                class="md-raised md-primary"
+                :disabled="saving"
+                value="generate"
+              >
+                Generate
               </md-button>
             </md-card-actions>
           </form>
         </md-card>
 
-        <md-snackbar :md-active.sync="saving">
+        <md-snackbar :md-active.sync="saved">
           Sucessfully created.
         </md-snackbar>
         <md-snackbar :md-active.sync="connectionError">
@@ -140,6 +150,7 @@ export default {
 
     connectionError: false,
     saving: false,
+    saved: false,
   }),
   computed: {
     embed_url() {
@@ -177,8 +188,7 @@ export default {
       const a = t.split(':');
       return a[0] * 60 + parseFloat(a[1]);
     },
-    async saveConfig() {
-      console.log(this.start_seconds, this.end_seconds);
+    async getJson() {
       const startSeconds = this.timeStampToSeconds(this.start_seconds);
       const endSeconds = this.timeStampToSeconds(this.end_seconds);
 
@@ -188,10 +198,10 @@ export default {
       const { b64Img } = results;
 
       const extension = this.iteration > 1 ? `_${this.iteration}` : '';
-      const jsonName = `${this.song}_${this.artist}${extension}.json`;
+      const name = `${this.song}_${this.artist}${extension}`;
 
       const config = {
-        json_name: jsonName,
+        name,
         song: this.song,
         artist: this.artist,
         original_lines: this.original_lines,
@@ -202,8 +212,23 @@ export default {
         shorten: this.shorten,
         outro: this.outro,
         b64_img: b64Img,
+        type: 'tts-rappeur',
       };
-      this.save(jsonName, JSON.stringify(config));
+      return config;
+    },
+    async submit(event) {
+      this.saving = true;
+      try {
+        const config = await this.getJson();
+        if (event.submitter.value === 'save') {
+          this.save(`${config.name}.json`, JSON.stringify(config));
+        } else {
+          await this.apiPost('generate', config);
+        }
+        this.saved = true;
+      } finally {
+        this.saving = false;
+      }
     },
     async newProject() {
       const results = await this.apiPost('info', {
@@ -223,5 +248,10 @@ export default {
 ul {
   padding: 0;
   margin: 0;
+}
+.md-toolbar form {
+  display: flex;
+  align-items: center;
+  align-content: center;
 }
 </style>

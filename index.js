@@ -10,6 +10,7 @@ const API_KEY = process.env.GENIUS_KEY
 
 // initialize express app
 const app = express()
+const factory_url = process.env.FACTORY_URL || 'http://127.0.0.1:3334'
 const port = process.env.PORT || 3333
 
 app.use(cors())
@@ -56,6 +57,16 @@ router.post('/image', async (req, res) => {
     const b64Img = Buffer.from(response.data, "binary").toString('base64');
 
     res.json({ b64Img });
+  } catch (err) {
+    console.error(err)
+    res.status(500).send()
+  }
+})
+
+router.post('/generate', async (req, res) => {
+  try {
+    await axios.post(factory_url + '/api/video', req.body);
+    res.status(200).send();
   } catch (err) {
     console.error(err)
     res.status(500).send()
