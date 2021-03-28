@@ -51,7 +51,7 @@
                 <label>Original lyrics</label>
                 <md-textarea
                   required
-                  v-model="original_lines"
+                  v-model.trim="original_lines"
                   md-autogrow
                 ></md-textarea>
               </md-field>
@@ -59,7 +59,7 @@
                 <label>Modified lyrics</label>
                 <md-textarea
                   required
-                  v-model="modified_lines"
+                  v-model.trim="modified_lines"
                   md-autogrow
                 ></md-textarea>
               </md-field>
