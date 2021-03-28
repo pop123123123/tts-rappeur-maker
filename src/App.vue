@@ -187,7 +187,11 @@ export default {
       });
       const { b64Img } = results;
 
+      const extension = this.iteration > 1 ? `_${this.iteration}` : '';
+      const jsonName = `${this.song}_${this.artist}${extension}.json`;
+
       const config = {
+        json_name: jsonName,
         song: this.song,
         artist: this.artist,
         original_lines: this.original_lines,
@@ -199,8 +203,7 @@ export default {
         outro: this.outro,
         b64_img: b64Img,
       };
-      const extension = this.iteration > 1 ? `_${this.iteration}` : '';
-      this.save(`${this.song}_${this.artist}${extension}.json`, JSON.stringify(config));
+      this.save(jsonName, JSON.stringify(config));
     },
     async newProject() {
       const results = await this.apiPost('info', {
