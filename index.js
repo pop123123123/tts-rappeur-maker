@@ -32,7 +32,7 @@ router.post('/info', async (req, res) => {
       apiKey: API_KEY,
       title,
       artist,
-      optimizeQuery: true,
+      optimizeQuery: false,
     };
     const { url } = (await genius.searchSong(options))[0];
 
