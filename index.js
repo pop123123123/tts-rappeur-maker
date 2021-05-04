@@ -1,4 +1,5 @@
 const express = require('express');
+const compression = require('compression');
 const cors = require('cors');
 const yts = require('yt-search');
 const genius = require('genius-lyrics-api');
@@ -14,6 +15,7 @@ const port = process.env.PORT || 3333;
 app.use(cors());
 
 // configure middlewares
+app.use(compression());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
